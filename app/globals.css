@@ -88,8 +88,12 @@
   }
 }
 
-.bg-olive{
+/* .bg-olive{
   background-color: #5a6330;
+} */
+
+.bg-olive{
+  background-color: #7a8944 !important ;
 }
 .text-gold{
   color: #c9a227;
@@ -115,12 +119,12 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Hard reset for placeholders to ensure maximum visibility in tactical terminal fields */
+/* Hard reset for placeholders to ensure maximum visibility on dark backgrounds */
 input::placeholder {
-  color: black !important;
-  opacity: 1 !important;
-  font-weight: 800 !important;
-  -webkit-text-fill-color: black !important; /* Forces color in some WebKit browsers */
+  color: white !important;
+  opacity: 0.7 !important;
+  font-weight: 500 !important;
+  -webkit-text-fill-color: white !important;
 }
 
 a {

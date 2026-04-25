@@ -303,7 +303,7 @@ export default function HomePage({ pageData }: { pageData: any }) {
                 </p>
                 <Link
                   href="/custom-dog-tags"
-                  className="bg-white text-ink font-head text-[13px] font-bold tracking-widest uppercase px-8 py-3.5 rounded-[2px] hover:bg-gold transition-all active:translate-y-1"
+                  className="border text-black text-black font-head text-[13px] font-bold tracking-widest uppercase px-8 py-3.5 rounded-[2px] hover:bg-gold transition-all active:translate-y-1"
                 >
                   Shop Now
                 </Link>
@@ -513,12 +513,12 @@ export default function HomePage({ pageData }: { pageData: any }) {
                   <input
                     type="text"
                     placeholder="First Name"
-                    className="w-full h-[60px] bg-black/20 border border-white/10 rounded-[2px] px-6 font-medium text-[14px] text-white placeholder:text-white/40 focus:border-white/40 outline-none transition-all outline-none"
+                    className="w-full h-[60px] bg-black/20 border border-white/10 rounded-[2px] px-6 font-medium text-[14px] text-white placeholder:text-white focus:border-white/40 outline-none transition-all outline-none"
                   />
                   <input
                     type="text"
                     placeholder="Last Name"
-                    className="w-full h-[60px] bg-black/20 border border-white/10 rounded-[2px] px-6 font-medium text-[14px] text-white placeholder:text-white/40 focus:border-white/40 outline-none transition-all outline-none"
+                    className="w-full h-[60px] bg-black/20 border border-white/10 rounded-[2px] px-6 font-medium text-[14px] text-white placeholder:text-white focus:border-white/40 outline-none transition-all outline-none"
                   />
                 </div>
                 <input

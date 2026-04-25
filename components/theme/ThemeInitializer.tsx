@@ -66,7 +66,7 @@ export default function ThemeInitializer() {
       }
 
       /* Specific element overrides to ensure theme adherence */
-      .bg-olive { background-color: var(--btn-primary-bg) !important; }
+      .bg-olive { background-color: #7a8a32ff !important; }
       .text-gold { color: var(--accent-color) !important; }
       .bg-ink { background-color: var(--bg-color) !important; }
       .bg-charcoal { background-color: var(--surface-color) !important; }

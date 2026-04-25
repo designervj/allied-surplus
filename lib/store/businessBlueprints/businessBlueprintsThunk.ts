@@ -15,11 +15,13 @@ export const fetchBusinessBlueprint = createAsyncThunk(
         },
         credentials: "include",
       });
+
+      if (!resp.ok) {
+        const errorData = await resp.json().catch(() => ({}));
+        throw new Error(errorData.error || `Failed to fetch: ${resp.status}`);
+      }
+
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || "Failed to fetch theme");
-
-      const config = data.data;
-
       return data;
     } catch (err: any) {
       return rejectWithValue(err.message);
@@ -41,13 +43,13 @@ export const updateBusinessBlueprint = createAsyncThunk(
         credentials: "include",
       });
 
+      if (!resp.ok) {
+        const errorData = await resp.json().catch(() => ({}));
+        throw new Error(errorData.error || `Failed to update: ${resp.status}`);
+      }
+
       const data = await resp.json();
-
-      if (!resp.ok) throw new Error(data.error || "Failed to update theme");
-
-      const config = data.data;
-
-      return config;
+      return data;
     } catch (err: any) {
       return rejectWithValue(err.message);
     }

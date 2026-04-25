@@ -464,123 +464,139 @@ export default function SiteChrome({
       </aside>
 
       {/* TOPBAR (Desktop only) */}
-      <div className="topbar bg-ink border-b border-white/7 font-body text-[12px] text-white/55 hidden md:block">
-        <div className="topbar__inner container flex items-center justify-between h-[36px] max-w-[1340px] px-6 mx-auto">
-          <div className="topbar__locations flex gap-6 items-center flex-wrap">
+      <div className="topbar bg-[#0a0b0a] border-b border-white/5 font-body text-[11px] text-white/50 hidden md:block">
+        <div className="topbar__inner container flex items-center justify-between h-[42px] max-w-[1340px] px-6 mx-auto">
+          {/* Left: Locations with tactical labels */}
+          <div className="topbar__locations flex gap-10 items-center">
             {locations.slice(0, 2).map((loc, index) => (
               <div
                 key={loc.id ?? index}
                 className={cn(
-                  "topbar__loc flex items-center gap-1.5",
+                  "topbar__loc group flex items-center gap-3 transition-all cursor-default",
                   index === 1 ? "lg:flex hidden" : "",
                 )}
               >
-                <MapPin size={12} className="text-gold" />
-                <span>
-                  {loc.name}: {loc.address}
-                  {loc.phone ? ` — ${loc.phone}` : ""}
-                </span>
+                <div className="h-6 w-6 rounded-sm bg-gold/5 border border-gold/10 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
+                  <MapPin size={12} className="text-gold opacity-70 group-hover:opacity-100" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-head font-black tracking-[0.2em] text-gold/40 uppercase leading-none mb-0.5">
+                    {loc.name.includes("PHOENIX") ? "TACTICAL HQ" : "REGIONAL HUB"}
+                  </span>
+                  <span className="text-white/70 font-bold tracking-tight whitespace-nowrap">
+                    {loc.address} {loc.phone && <span className="text-white/20 mx-1.5">•</span>} {loc.phone}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="topbar__links flex gap-3.5 items-center ml-auto">
-            {user ? (
+          {/* Right: Quick Links & Actions */}
+          <div className="topbar__links flex gap-6 items-center ml-auto h-full">
+            <nav className="flex items-center gap-5">
+              {user ? (
+                <Link
+                  href="/login"
+                  onClick={() => {
+                    dispatch(logoutThunk());
+                  }}
+                  className="flex items-center gap-2 hover:text-gold transition-colors whitespace-nowrap uppercase font-black tracking-widest"
+                >
+                  <LogOut size={13} className="text-gold/50" /> <span>Log out</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 hover:text-gold transition-colors whitespace-nowrap uppercase font-black tracking-widest"
+                >
+                  <User size={13} className="text-gold/50" /> <span>Login</span>
+                </Link>
+              )}
+              
               <Link
-                href="/login"
-                onClick={() => {
-                  dispatch(logoutThunk());
-                }}
-                className="flex items-center gap-1.5 hover:text-gold transition-colors whitespace-nowrap uppercase font-bold tracking-tighter"
+                href="/wishlist"
+                className="flex items-center gap-2 hover:text-gold transition-colors whitespace-nowrap uppercase font-black tracking-widest"
               >
-                <LogOut size={12} /> Log out
+                <Heart size={13} className="text-gold/50" /> <span>Wishlist</span>
               </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center gap-1.5 hover:text-gold transition-colors whitespace-nowrap uppercase font-bold tracking-tighter"
-              >
-                <User size={12} /> Login
-              </Link>
-            )}
-            <span className="topbar__sep text-white/20">|</span>
-            <Link
-              href="/wishlist"
-              className="flex items-center gap-1.5 hover:text-gold transition-colors whitespace-nowrap uppercase font-bold tracking-tighter"
-            >
-              <Heart size={12} /> Wishlist
-            </Link>
-            <span className="topbar__sep text-white/20">|</span>
-            <Link
-              href="/order-tracking"
-              className="flex items-center gap-1.5 hover:text-gold transition-colors whitespace-nowrap uppercase font-bold tracking-tighter"
-            >
-              <Truck size={12} /> Order Tracking
-            </Link>
-            {user?.role !== "customer" && (
-              <Link
-                href="/admin"
-                className="flex px-2 py-0.5 border border-gold/50 items-center gap-1.5 hover:text-gold hover:border-gold transition-all whitespace-nowrap uppercase font-bold tracking-tighter"
-              >
-                <Terminal size={12} /> Admin
-              </Link>
-            )}
 
-            {/* Language Switcher */}
-            {availableLanguages.length > 1 && (
-              <>
-                <span className="topbar__sep text-white/20">|</span>
-                <div className="flex items-center gap-1.5 group relative">
-                  <Globe size={12} className="text-gold" />
+              <Link
+                href="/order-tracking"
+                className="flex items-center gap-2 hover:text-gold transition-colors whitespace-nowrap uppercase font-black tracking-widest"
+              >
+                <Truck size={13} className="text-gold/50" /> <span>Tracking</span>
+              </Link>
+            </nav>
+
+            <div className="h-4 w-px bg-white/5 mx-1" />
+
+            <div className="flex items-center gap-4">
+              {user?.role !== "customer" && (
+                <Link
+                  href="/admin"
+                  className="flex h-7 px-3 bg-gold/5 border border-gold/20 items-center gap-2 text-gold/80 hover:bg-gold hover:text-ink transition-all whitespace-nowrap uppercase font-black tracking-tighter text-[10px] rounded-[2px] group"
+                >
+                  <Terminal size={12} className="group-hover:animate-pulse" /> 
+                  <span>Admin Panel</span>
+                </Link>
+              )}
+
+              {/* Language Switcher - Premium Style */}
+              {availableLanguages.length > 1 && (
+                <div className="flex items-center gap-2 pl-2 border-l border-white/5 group relative h-full cursor-pointer">
+                  <div className="flex items-center gap-2 hover:text-white transition-colors">
+                    <Globe size={13} className="text-gold/50 group-hover:text-gold" />
+                    <span className="font-black uppercase tracking-widest text-[10px]">{locale}</span>
+                    <ChevronDown size={10} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  
+                  {/* Custom dropdown on hover or native select hidden? 
+                      I'll use a styled native select for better accessibility but hide the default styling more aggressively. */}
                   <select
                     value={locale}
                     onChange={(e) => handleLanguageChange(e.target.value)}
-                    className="bg-transparent text-white/55 border-none outline-none cursor-pointer hover:text-gold transition-colors appearance-none pr-3 uppercase font-bold tracking-tighter text-[11px]"
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                   >
                     {availableLanguages.map((lang) => (
                       <option
                         key={lang.code}
                         value={lang.code}
-                        className="bg-charcoal text-white"
+                        className="bg-ink text-white"
                       >
-                        {lang.name.toUpperCase()}
+                        {lang.name}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown
-                    size={10}
-                    className="absolute right-0 pointer-events-none opacity-40 group-hover:opacity-100"
-                  />
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* HEADER */}
-      <header className="header bg-charcoal border-b-2 border-olive sticky top-0 z-[900] shadow-md">
-        <div className="header__inner container flex items-center gap-4 lg:gap-6 h-[72px] max-w-[1340px] px-4 sm:px-6 mx-auto">
+      <header className="header bg-[#121311] border-b border-olive/30 sticky top-0 z-[900] shadow-2xl backdrop-blur-md">
+        <div className="header__inner container flex items-center gap-4 lg:gap-10 h-[84px] max-w-[1340px] px-4 sm:px-8 mx-auto">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="lg:hidden h-10 w-10 px-2 flex items-center justify-center text-white/60 hover:text-gold transition-colors border border-white/10 rounded-[2px]"
+            className="lg:hidden h-11 w-11 flex items-center justify-center text-white/50 hover:text-gold transition-all border border-white/5 rounded-sm hover:bg-white/5"
           >
-            <Menu size={22} />
+            <Menu size={24} />
           </button>
 
           {/* Logo */}
           <Link
             href="/"
-            className="header__logo shrink-0 flex items-center gap-2.5"
+            className="header__logo shrink-0 flex items-center group"
           >
-            <div className="object-contain border border-olive-lt rounded-[3px] flex items-center justify-center overflow-hidden">
+            <div className="p-1 bg-white/5 border border-white/10 rounded-sm group-hover:border-gold/30 transition-all shadow-inner">
               <Image
                 src={logo.url}
                 alt={logo.alt || companyName}
-                width={logo.width || 70}
-                height={logo.height || 70}
-                className="object-contain"
+                width={74}
+                height={74}
+                className="object-contain group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           </Link>
@@ -875,33 +891,41 @@ export default function SiteChrome({
       <main className="flex-1 w-full relative z-0">{children}</main>
 
       {/* FOOTER */}
-      <footer className="footer bg-charcoal border-t border-white/8 pt-[60px] pb-[80px] px-6">
-        <div className="container max-w-[1340px] mx-auto">
-          <div className="footer__grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-6">
-            {/* Brand */}
-            <div className="footer__brand">
+      <footer className="footer bg-[#0a0b0a] border-t border-white/5 pt-20 pb-12 px-6 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+        <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="container max-w-[1340px] mx-auto relative z-10">
+          <div className="footer__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+            {/* Brand - Sector 01 */}
+            <div className="footer__brand space-y-8">
               <Link
                 href="/"
-                className="footer-logo flex items-center gap-2.5 mb-6"
+                className="footer-logo inline-block group"
               >
-                <div className="object-contain border border-olive-lt rounded-[3px] flex items-center justify-center overflow-hidden">
+                <div className="p-2 bg-white/5 border border-white/10 rounded-sm group-hover:border-gold/30 transition-all shadow-inner">
                   <Image
                     src={logo.url}
                     alt={logo.alt || companyName}
-                    width={logo.width || 100}
-                    height={logo.height || 100}
-                    className="object-contain"
+                    width={90}
+                    height={90}
+                    className="object-contain grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-110 transition-all duration-500"
                   />
                 </div>
               </Link>
 
-              <p className="text-[15px] text-white/70 leading-relaxed max-w-[320px] mb-2 italic">
-                {companyTagline}
-              </p>
-
-              <p className="text-[12px] text-white/40 mb-6 uppercase tracking-[0.18em]">
-                Since {foundedYear}
-              </p>
+              <div className="space-y-4">
+                <p className="text-[14px] text-white/50 leading-relaxed max-w-[300px] font-medium italic">
+                  "{companyTagline}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="h-px w-6 bg-gold/30" />
+                  <span className="text-[10px] text-gold/60 uppercase font-black tracking-[0.3em]">
+                    ESTABLISHED {foundedYear}
+                  </span>
+                </div>
+              </div>
 
               <div className="footer-socials flex gap-3">
                 {enabledSocials.map((social, idx) => (
@@ -910,145 +934,104 @@ export default function SiteChrome({
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-btn w-[34px] h-[34px] bg-dark border border-white/10 rounded-[3px] flex items-center justify-center text-white/60 hover:bg-olive hover:text-white hover:border-olive transition-all"
+                    className="social-btn w-10 h-10 bg-white/5 border border-white/10 rounded-sm flex items-center justify-center text-white/40 hover:bg-gold hover:text-ink hover:border-gold transition-all group"
                     aria-label={social.platform}
                   >
-                    {renderSocialIcon(social.platform)}
+                    <div className="group-hover:scale-110 transition-transform">
+                      {renderSocialIcon(social.platform)}
+                    </div>
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Categories */}
-            <div>
-              <div className="footer-col-title font-head text-[16px] font-bold text-white uppercase tracking-wider mb-6 pb-2 border-b border-white/5">
-                Top Categories
+            {/* Categories - Sector 02 */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
+                <h4 className="font-head text-[16px] font-black text-white uppercase tracking-[0.2em]">
+                  Top Categories
+                </h4>
               </div>
-              <ul className="footer-links flex flex-col gap-2.5 text-[15px] text-white/65">
-                <li>
-                  <Link
-                    href="/shop"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Apparel & Uniforms
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Tactical Pants & Shirts
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Military Footwear
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Backpacks & Bags
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Custom Dog Tags
-                  </Link>
-                </li>
+              <ul className="footer-links flex flex-col gap-4 text-[13px] text-white/40 font-black uppercase tracking-widest">
+                {[
+                  "Apparel & Uniforms",
+                  "Tactical Pants & Shirts",
+                  "Military Footwear",
+                  "Backpacks & Bags",
+                  "Custom Dog Tags"
+                ].map((item) => (
+                  <li key={item}>
+                    <Link
+                      href="/shop"
+                      className="hover:text-gold hover:pl-2 transition-all flex items-center gap-2 group"
+                    >
+                      <ChevronRight size={12} className="text-gold opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all" />
+                      {item}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Mission Support */}
-            <div>
-              <div className="footer-col-title font-head text-[16px] font-bold text-white uppercase tracking-wider mb-6 pb-2 border-b border-white/5">
-                Customer Support
+            {/* Mission Support - Sector 03 */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
+                <h4 className="font-head text-[16px] font-black text-white uppercase tracking-[0.2em]">
+                  Mission Support
+                </h4>
               </div>
-              <ul className="footer-links flex flex-col gap-2.5 text-[15px] text-white/65">
-                <li>
-                  <Link
-                    href={privacyUrl}
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/faq"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Customer Service
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shipping"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Shipping & Delivery
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/returns"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Returns & Replacement
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Contact Command
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href={termsUrl}
-                    className="hover:text-white transition-colors italic"
-                  >
-                    Terms & Conditions
-                  </Link>
-                </li>
+              <ul className="footer-links flex flex-col gap-4 text-[13px] text-white/40 font-black uppercase tracking-widest">
+                {[
+                  { label: "Privacy Policy", href: privacyUrl },
+                  { label: "Customer Service", href: "/faq" },
+                  { label: "Shipping & Delivery", href: "/shipping" },
+                  { label: "Returns & Replacement", href: "/returns" },
+                  { label: "Contact Command", href: "/contact" }
+                ].map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-gold hover:pl-2 transition-all flex items-center gap-2 group"
+                    >
+                      <ChevronRight size={12} className="text-gold opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Contact Command */}
-            <div>
-              <div className="footer-col-title font-head text-[16px] font-bold text-white uppercase tracking-wider mb-6 pb-2 border-b border-white/5">
-                Contact Command
+            {/* Contact Command - Sector 04 */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
+                <h4 className="font-head text-[16px] font-black text-white uppercase tracking-[0.2em]">
+                  Command Center
+                </h4>
               </div>
 
-              <div className="footer-contact flex flex-col gap-6">
+              <div className="footer-contact flex flex-col gap-8">
                 {locations.map((loc, index) => (
                   <div
                     key={loc.id ?? index}
-                    className="footer-contact-item flex gap-3 items-start"
+                    className="footer-contact-item flex gap-4 items-start group"
                   >
-                    <MapPin size={16} className="text-gold mt-1 shrink-0" />
-                    <div className="footer-contact-text">
-                      <h5 className="text-white font-bold text-[14px] italic">
+                    <div className="w-8 h-8 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-gold/30 transition-all shrink-0">
+                      <MapPin size={14} className="text-gold opacity-50 group-hover:opacity-100" />
+                    </div>
+                    <div className="space-y-1">
+                      <h5 className="text-white/80 font-black text-[11px] uppercase tracking-widest leading-none">
                         {loc.name}
                       </h5>
-                      <p className="text-[13px] text-white/50 mb-0.5">
+                      <p className="text-[12px] text-white/40 font-medium leading-relaxed">
                         {loc.address}
                       </p>
                       {loc.phone && phoneDisplay && (
                         <a
                           href={`tel:${loc.phone.replace(/\D/g, "")}`}
-                          className="text-[13px] text-gold italic"
+                          className="text-[12px] text-gold/60 hover:text-gold font-black transition-colors"
                         >
                           {loc.phone}
                         </a>
@@ -1057,15 +1040,17 @@ export default function SiteChrome({
                   </div>
                 ))}
 
-                <div className="footer-contact-item flex gap-3 items-start">
-                  <Mail size={16} className="text-gold mt-1 shrink-0" />
-                  <div className="footer-contact-text">
-                    <h5 className="text-white font-bold text-[14px] italic">
-                      Secure Email
+                <div className="footer-contact-item flex gap-4 items-start group">
+                  <div className="w-8 h-8 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-gold/30 transition-all shrink-0">
+                    <Mail size={14} className="text-gold opacity-50 group-hover:opacity-100" />
+                  </div>
+                  <div className="space-y-1">
+                    <h5 className="text-white/80 font-black text-[11px] uppercase tracking-widest leading-none">
+                      Secure Channel
                     </h5>
                     <a
                       href={`mailto:${primaryEmail}`}
-                      className="text-[14px] text-gold italic break-all"
+                      className="text-[13px] text-gold/60 hover:text-gold font-black transition-colors break-all"
                     >
                       {primaryEmail}
                     </a>
@@ -1075,42 +1060,49 @@ export default function SiteChrome({
             </div>
           </div>
 
-          <div className="footer__bottom mt-[40px] pt-6 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] tracking-[0.2em] font-medium text-white/30 uppercase italic text-center sm:text-left">
-            <p className="footer-copy">{copyrightText}</p>
+          {/* Footer Bottom Bar */}
+          <div className="footer__bottom mt-20 pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-10">
+            <div className="space-y-2 text-center lg:text-left">
+              <p className="text-[10px] font-black tracking-[0.3em] uppercase text-white/20 italic">
+                {copyrightText}
+              </p>
+              <div className="flex items-center justify-center lg:justify-start gap-4">
+                {["VISA", "MASTERCARD", "PAYPAL", "AMEX"].map((p) => (
+                  <span
+                    key={p}
+                    className="text-[9px] font-black tracking-widest text-white/10 border border-white/5 px-2 py-0.5 rounded-sm"
+                  >
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-            <div className="footer-payments flex items-center gap-3">
-              {["Visa", "MC", "PayPal"].map((p) => (
-                <span
-                  key={p}
-                  className="px-2 py-0.5 border border-white/10 rounded-[2px] text-[10px] text-white/40"
-                >
-                  {p}
-                </span>
-              ))}
-
-              <div className="flex items-center gap-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gold opacity-50 block">
-                  Currency
-                </label>
-                <Select
-                  onValueChange={(value) => {
-                    dispatch(setCurrenyCurrency(value));
-                  }}
-                  value={currencyselector || ""}
-                >
-                  <SelectTrigger className="h-10 bg-ink border-charcoal-light text-xs text-white font-black uppercase tracking-widest">
-                    <SelectValue placeholder="Select Currency" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-charcoal border-gold text-white font-black uppercase tracking-widest text-[10px]">
-                    {availableCurrencies.map((d) => {
-                      return (
-                        <SelectItem key={d.code} value={d.code}>
-                          {d.name}
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <div className="flex items-center gap-4 group">
+                <div className="flex flex-col items-end">
+                  <span className="text-[8px] font-black text-gold/40 uppercase tracking-widest leading-none">Currency</span>
+                  <span className="text-[11px] font-black text-white/60 uppercase tracking-widest">Active Selector</span>
+                </div>
+                <div className="min-w-[140px]">
+                  <Select
+                    onValueChange={(value) => {
+                      dispatch(setCurrenyCurrency(value));
+                    }}
+                    value={currencyselector || ""}
+                  >
+                    <SelectTrigger className="h-10 bg-white/5 border-white/10 text-[11px] text-white font-black uppercase tracking-[0.2em] rounded-sm focus:ring-1 focus:ring-gold/30 hover:bg-white/[0.08] transition-all">
+                      <SelectValue placeholder="CURRENCY" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#121311] border-gold/30 text-white font-black uppercase tracking-[0.15em] text-[10px]">
+                      {availableCurrencies.map((d) => (
+                        <SelectItem key={d.code} value={d.code} className="hover:bg-gold/10 focus:bg-gold/10">
+                          {d.name} ({d.code})
                         </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
