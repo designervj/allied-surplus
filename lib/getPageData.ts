@@ -66,16 +66,23 @@ export const getTenantRegistry = cache(async () => {
 
 
 export const getBusinessBlueprint = cache(async () => {
-  const tenantRegistry = await fetch(
-    "http://localhost:8000/platform/business-blueprint",
-    {
-      headers: {
-        "x-tenant-db": tenantHeader || "",
+  try {
+    const tenantRegistry = await fetch(
+      "http://localhost:8000/platform/business-blueprint",
+      {
+        headers: {
+          "x-tenant-db": tenantHeader || "",
+        },
+        credentials: "include",
       },
-      credentials: "include",
-    },
-  );
-  const data = await tenantRegistry.json();
-
-  return serialize(data.data);
+    );
+    
+    if (!tenantRegistry.ok) return null;
+    
+    const data = await tenantRegistry.json();
+    return serialize(data.data);
+  } catch (error) {
+    console.error("Failed to fetch business blueprint:", error);
+    return null;
+  }
 });

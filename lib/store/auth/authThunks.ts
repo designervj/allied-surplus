@@ -88,8 +88,10 @@ export const updateProfileThunk = createAsyncThunk(
   async (
     {
       userData,
+      userId,
     }: {
       userData: any;
+      userId?: string;
     },
     { rejectWithValue, getState },
   ) => {
