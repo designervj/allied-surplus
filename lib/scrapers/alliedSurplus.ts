@@ -12,6 +12,7 @@ export interface ScrapedProduct {
   gallery: string[];
 }
 
+
 export async function scrapeAlliedSurplus(limit: number = 20): Promise<ScrapedProduct[]> {
   try {
     const response = await fetch('https://alliedsurplus.com/shop/');
